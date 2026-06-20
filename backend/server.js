@@ -70,9 +70,9 @@ const authLimiter = rateLimit({
     message: { message: 'Too many login attempts. Try again in 15 minutes.' }
 });
 
-// Commented out for load testing
-// app.use('/api', apiLimiter);
-// app.use('/api/auth', authLimiter);
+// Rate limiting enabled to protect against Brute Force and DDoS
+app.use('/api', apiLimiter);
+app.use('/api/auth', authLimiter);
 
 // Routes
 const authRoutes = require('./src/routes/authRoutes');
@@ -92,11 +92,13 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/notifications', notificationRoutes);
 
 // Initialize Database
-initDB();
+if (require.main === module) {
+    initDB();
 
-// Initialize Background Jobs
-const { startCronJobs } = require('./src/utils/cronJobs');
-startCronJobs();
+    // Initialize Background Jobs
+    const { startCronJobs } = require('./src/utils/cronJobs');
+    startCronJobs();
+}
 
 // Basic Route
 app.get('/', (req, res) => {
@@ -109,8 +111,13 @@ require('./src/sockets/proctoringSocket')(io);
 const PORT = process.env.PORT || 5000;
 // Triggers nodemon restart
 // Server is running on port 5000
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+if (require.main === module) {
+    server.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+// Export app and server for testing
+module.exports = { app, server };
 // Nodemon restart trigger
 

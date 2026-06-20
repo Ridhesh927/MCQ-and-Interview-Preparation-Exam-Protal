@@ -63,8 +63,39 @@ npm install
 npm run dev
 ```
 
-### 4. Default Credentials
-When creating new students(manually added) from the dashboard, their default password is set to **`Test@123`**.
+### 4. Demo Credentials & Bootstrapping
+When the backend starts, it automatically bootstraps the following demo accounts to make testing deployments seamless:
+- **Demo Student:** `student@test.com` (PRN: `TEST_STUDENT_001`) | Password: `password123`
+- **Demo Teacher:** `teacher@test.com` | Password: `password123`
+- **Main Admin:** Bootstrapped via `.env` (`ADMIN_EMAIL` and `ADMIN_PASSWORD`)
+
+*(Note: When manually creating new students from the dashboard, their default password is set to **`Test@123`**).*
+
+---
+
+## 🔐 Security Enhancements
+
+The platform includes several strict security mechanisms to prevent unauthorized access:
+- **Rate Limiting:** Protects the `/api/auth` routes against brute-force attacks (12 attempts per 15 minutes) and limits general API usage to prevent DDoS attacks.
+- **IDOR Protection:** Exam start and submission routes strictly validate the student's department/year matches the exam requirements, and ensure active sessions exist before processing grades.
+- **Strict Role-Based Access Control (RBAC):** Middleware guarantees that only Main Admins can create other teachers.
+- **Server-Side Logout:** Token revocation mechanisms actively terminate JWT sessions on the server.
+
+---
+
+## 🧪 Testing
+
+We use **Jest** and **Supertest** to conduct robust integration testing across the backend. Tests are executed in isolation on a temporary database (`exam_portal_test`) to prevent data corruption.
+
+To run the integration tests:
+```bash
+cd backend
+npm test
+```
+The test suite validates:
+1. Authentication & Role Permissions
+2. Full Teacher Exam Lifecycle (Creation & Management)
+3. Full Student Exam Lifecycle (Session tracking & Submission scoring)
 
 ---
 

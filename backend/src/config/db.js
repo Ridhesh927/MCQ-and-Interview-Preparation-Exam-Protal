@@ -20,6 +20,7 @@ const pool = mysql.createPool({
 const DB_NAME = process.env.DB_NAME || 'exam_portal_v2';
 
 const hasColumn = async (connection, tableName, columnName) => {
+    const currentDbName = process.env.DB_NAME || 'exam_portal_v2';
     const [rows] = await connection.query(
         `SELECT 1
          FROM INFORMATION_SCHEMA.COLUMNS
@@ -27,7 +28,7 @@ const hasColumn = async (connection, tableName, columnName) => {
            AND TABLE_NAME = ?
            AND COLUMN_NAME = ?
          LIMIT 1`,
-        [DB_NAME, tableName, columnName]
+        [currentDbName, tableName, columnName]
     );
     return rows.length > 0;
 };
@@ -35,13 +36,18 @@ const hasColumn = async (connection, tableName, columnName) => {
 const ensureColumn = async (connection, tableName, columnName, definitionSql) => {
     const exists = await hasColumn(connection, tableName, columnName);
     if (!exists) {
-        await connection.query(
-            `ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${definitionSql}`
-        );
+        try {
+            await connection.query(
+                `ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${definitionSql}`
+            );
+        } catch (err) {
+            if (err.code !== 'ER_DUP_FIELDNAME') throw err;
+        }
     }
 };
 
 const ensureSecurityColumns = async (connection) => {
+    const currentDbName = process.env.DB_NAME || 'exam_portal_v2';
     const [rows] = await connection.query(
         `SELECT 1
          FROM INFORMATION_SCHEMA.COLUMNS
@@ -49,13 +55,17 @@ const ensureSecurityColumns = async (connection) => {
            AND TABLE_NAME = 'teachers'
            AND COLUMN_NAME = 'is_main_admin'
          LIMIT 1`,
-        [DB_NAME]
+        [currentDbName]
     );
 
     if (!rows.length) {
-        await connection.query(
-            'ALTER TABLE teachers ADD COLUMN is_main_admin BOOLEAN DEFAULT FALSE'
-        );
+        try {
+            await connection.query(
+                'ALTER TABLE teachers ADD COLUMN is_main_admin BOOLEAN DEFAULT FALSE'
+            );
+        } catch (err) {
+            if (err.code !== 'ER_DUP_FIELDNAME') throw err;
+        }
     }
 };
 
@@ -139,6 +149,34 @@ const ensureMainAdminAccount = async (connection) => {
     console.log('Main admin account synchronized successfully.');
 };
 
+const ensureTestAccounts = async (connection) => {
+    const testTeacherEmail = 'teacher@test.com';
+    const testStudentEmail = 'student@test.com';
+    const password = 'password123';
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Check teacher
+    const [teacherRows] = await connection.query('SELECT id FROM teachers WHERE email = ?', [testTeacherEmail]);
+    if (teacherRows.length === 0) {
+        await connection.query(
+            'INSERT INTO teachers (username, email, password, is_main_admin, is_blocked) VALUES (?, ?, ?, FALSE, FALSE)',
+            ['Demo Teacher', testTeacherEmail, hashedPassword]
+        );
+        console.log(`Demo teacher account created: ${testTeacherEmail} / ${password}`);
+    }
+
+    // Check student
+    const [studentRows] = await connection.query('SELECT id FROM students WHERE email = ?', [testStudentEmail]);
+    if (studentRows.length === 0) {
+        const prn = 'TEST_STUDENT_001';
+        await connection.query(
+            'INSERT INTO students (username, email, password, prn_number, department, year, is_blocked) VALUES (?, ?, ?, ?, ?, ?, FALSE)',
+            ['Demo Student', testStudentEmail, hashedPassword, prn, 'CS', '3']
+        );
+        console.log(`Demo student account created: PRN: ${prn} / ${password}`);
+    }
+};
+
 const initDB = async () => {
     try {
         const connection = await pool.getConnection();
@@ -156,6 +194,7 @@ const initDB = async () => {
         await ensureSecurityColumns(connection);
         await ensureExamEnhancementSchema(connection);
         await ensureMainAdminAccount(connection);
+        await ensureTestAccounts(connection);
 
         console.log('Database initialized successfully.');
         connection.release();

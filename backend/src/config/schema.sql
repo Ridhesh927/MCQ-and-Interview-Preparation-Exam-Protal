@@ -1,6 +1,3 @@
-CREATE DATABASE IF NOT EXISTS exam_portal_v2;
-
-USE exam_portal_v2;
 
 -- Teachers Table
 CREATE TABLE IF NOT EXISTS teachers (

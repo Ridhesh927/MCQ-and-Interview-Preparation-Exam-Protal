@@ -13,6 +13,7 @@ router.post('/student/login', authController.loginStudent);
 // router.post('/student/register', authController.registerStudent);
 
 // Protected routes
+router.post('/logout', authMiddleware, authController.logout);
 router.put('/change-password', authMiddleware, authController.changePassword);
 
 // Admin-only routes (main admin only for teachers)

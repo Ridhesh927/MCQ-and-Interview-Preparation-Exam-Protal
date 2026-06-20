@@ -156,6 +156,31 @@ exports.loginStudent = async (req, res) => {
         sendInternalError(res, 'Login failed. Please try again.');
     }
 };
+
+exports.logout = async (req, res) => {
+    try {
+        const { id, role } = req.user;
+        const table = role === 'teacher' ? 'teachers' : 'students';
+        
+        // Invalidate token in DB
+        await pool.query(`UPDATE ${table} SET last_token = NULL WHERE id = ?`, [id]);
+        
+        // Clear cookie
+        res.clearCookie('auth_token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/'
+        });
+
+        logger('LOGOUT', `User ID: ${id} (${role}) logged out`);
+        res.json({ message: 'Logged out successfully' });
+    } catch (error) {
+        logger('LOGOUT_ERROR', `Error during logout for user ID: ${req.user?.id}`, { error: error.message });
+        sendInternalError(res, 'Logout failed');
+    }
+};
+
 exports.changePassword = async (req, res) => {
     try {
         if (req.user.isMainAdmin) {

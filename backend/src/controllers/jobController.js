@@ -4,35 +4,37 @@ const path = require('path');
 const fs = require('fs');
 
 // Auto-add resume_filename column
-(async () => {
-    try {
-        await pool.query(
-            `ALTER TABLE job_applications ADD COLUMN resume_filename VARCHAR(255) NULL`
-        );
-    } catch (err) {
-        if (err.code !== 'ER_DUP_FIELDNAME') {
-            console.error('Failed to add resume_filename column:', err.message);
+if (process.env.NODE_ENV !== 'test') {
+    (async () => {
+        try {
+            await pool.query(
+                `ALTER TABLE job_applications ADD COLUMN resume_filename VARCHAR(255) NULL`
+            );
+        } catch (err) {
+            if (err.code !== 'ER_DUP_FIELDNAME') {
+                console.error('Failed to add resume_filename column:', err.message);
+            }
         }
-    }
-    try {
-        await pool.query(
-            `ALTER TABLE jobs ADD COLUMN max_applications INT NULL`
-        );
-    } catch (err) {
-        if (err.code !== 'ER_DUP_FIELDNAME') {
-            console.error('Failed to add max_applications column:', err.message);
+        try {
+            await pool.query(
+                `ALTER TABLE jobs ADD COLUMN max_applications INT NULL`
+            );
+        } catch (err) {
+            if (err.code !== 'ER_DUP_FIELDNAME') {
+                console.error('Failed to add max_applications column:', err.message);
+            }
         }
-    }
-    try {
-        await pool.query(
-            `ALTER TABLE jobs ADD COLUMN expires_at DATETIME NULL`
-        );
-    } catch (err) {
-        if (err.code !== 'ER_DUP_FIELDNAME') {
-            console.error('Failed to add expires_at column:', err.message);
+        try {
+            await pool.query(
+                `ALTER TABLE jobs ADD COLUMN expires_at DATETIME NULL`
+            );
+        } catch (err) {
+            if (err.code !== 'ER_DUP_FIELDNAME') {
+                console.error('Failed to add expires_at column:', err.message);
+            }
         }
-    }
-})();
+    })();
+}
 
 const jobController = {
     getAllJobs: async (req, res) => {

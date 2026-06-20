@@ -963,6 +963,16 @@ exports.submitExam = async (req, res) => {
             return res.status(400).json({ error: 'examId is required' });
         }
 
+        // Verify that the student has an active session for this exam
+        const [activeSessionRows] = await pool.query(
+            'SELECT id FROM exam_sessions WHERE exam_id = ? AND student_id = ? AND status = "active"',
+            [examId, studentId]
+        );
+
+        if (activeSessionRows.length === 0) {
+            return res.status(403).json({ error: 'No active session found for this exam. You cannot submit.' });
+        }
+
         // Check if already submitted (prevent duplicates)
         const [existing] = await pool.query(
             'SELECT id FROM exam_results WHERE exam_id = ? AND student_id = ?',
@@ -1123,6 +1133,47 @@ exports.startExamSession = async (req, res) => {
     try {
         const { examId } = req.body;
         const studentId = req.user.id;
+
+        // Fetch student details
+        const [studentRows] = await pool.query('SELECT department, year FROM students WHERE id = ?', [studentId]);
+        const student = studentRows[0] || {};
+        const studentDept = student.department || null;
+        const studentYear = student.year || null;
+
+        let deptCondition, yearCondition;
+        const params = [];
+
+        if (studentDept) {
+            deptCondition = '(target_department IS NULL OR target_department = ?)';
+            params.push(studentDept);
+        } else {
+            deptCondition = 'target_department IS NULL';
+        }
+
+        if (studentYear) {
+            yearCondition = '(target_year IS NULL OR target_year = ?)';
+            params.push(studentYear);
+        } else {
+            yearCondition = 'target_year IS NULL';
+        }
+
+        params.push(examId);
+
+        // Verify exam availability
+        const [examRows] = await pool.query(
+            `SELECT id FROM exams 
+             WHERE status IN ('Published', 'Scheduled') 
+             AND is_deleted = FALSE 
+             AND expires_at > NOW() 
+             AND ${deptCondition} 
+             AND ${yearCondition} 
+             AND id = ?`,
+            params
+        );
+
+        if (examRows.length === 0) {
+            return res.status(403).json({ message: 'Exam is not available or unauthorized' });
+        }
 
         // Check for existing active session
         const [active] = await pool.query(
