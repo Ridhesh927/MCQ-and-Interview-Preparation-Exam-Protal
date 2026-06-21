@@ -9,9 +9,7 @@ import {
     CartesianGrid, 
     Tooltip, 
     ResponsiveContainer, 
-    Cell,
-    PieChart,
-    Pie
+    Cell
 } from 'recharts';
 import { 
     Activity, 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sparkles, Loader2, Plus, Trash2, Upload, FileText, ImageIcon } from 'lucide-react';
+import { X, Sparkles, Loader2, Plus, Trash2, Upload, FileText } from 'lucide-react';
 import { getToken } from '../utils/auth';
-import { aiGenerationInputSchema, aiUploadFileSchema } from '../utils/validation';
+import { aiGenerationInputSchema } from '../utils/validation';
 
 interface AIGeneratorModalProps {
     isOpen: boolean;
@@ -11,37 +11,37 @@ interface AIGeneratorModalProps {
 }
 
 // Available reference categories (mapped to sections in the CSV dataset)
-const REFERENCE_CATEGORIES = [
-    { value: '', label: '--- None (AI generates freely) ---' },
-    { value: 'AI & ML', label: '🤖 AI & Machine Learning' },
-    { value: 'DevOps Engineer', label: '⚙️ DevOps Engineer' },
-    { value: 'React Engineer', label: '⚛️ React Engineer' },
-    { value: 'SAP Engineer', label: '🏢 SAP Engineer' },
-    { value: 'Computer Science', label: '💻 Computer Science' },
-    { value: 'Numerical Ability', label: '🔢 Numerical Ability' },
-    { value: 'Logical Reasoning', label: '🧩 Logical Reasoning' },
-    { value: 'Verbal Ability', label: '📝 Verbal Ability' },
-    { value: 'Quantitative Aptitude', label: '📊 Quantitative Aptitude' },
-];
+// const REFERENCE_CATEGORIES = [
+//     { value: '', label: '--- None (AI generates freely) ---' },
+//     { value: 'AI & ML', label: '🤖 AI & Machine Learning' },
+//     { value: 'DevOps Engineer', label: '⚙️ DevOps Engineer' },
+//     { value: 'React Engineer', label: '⚛️ React Engineer' },
+//     { value: 'SAP Engineer', label: '🏢 SAP Engineer' },
+//     { value: 'Computer Science', label: '💻 Computer Science' },
+//     { value: 'Numerical Ability', label: '🔢 Numerical Ability' },
+//     { value: 'Logical Reasoning', label: '🧩 Logical Reasoning' },
+//     { value: 'Verbal Ability', label: '📝 Verbal Ability' },
+//     { value: 'Quantitative Aptitude', label: '📊 Quantitative Aptitude' },
+// ];
 
-const AI_PROVIDERS = [
-    { value: 'auto', label: 'Auto (fallback between Groq/Gemini/K2)' },
-    { value: 'groq', label: 'Groq only' },
-    { value: 'gemini', label: 'Gemini only' },
-    { value: 'k2', label: 'K2 Think only' },
-];
+// const AI_PROVIDERS = [
+//     { value: 'auto', label: 'Auto (fallback between Groq/Gemini/K2)' },
+//     { value: 'groq', label: 'Groq only' },
+//     { value: 'gemini', label: 'Gemini only' },
+//     { value: 'k2', label: 'K2 Think only' },
+// ];
 
 const AIGeneratorModal: React.FC<AIGeneratorModalProps> = ({ isOpen, onClose, onAddQuestions }) => {
     const [context, setContext] = useState('');
     const [count, setCount] = useState(5);
     const [difficulty, setDifficulty] = useState('Medium');
-    const [category, setCategory] = useState('');
-    const [provider, setProvider] = useState('auto');
+    const [category] = useState('');
+    const [provider] = useState('auto');
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedQuestions, setGeneratedQuestions] = useState<any[]>([]);
-    const [referenceUsed, setReferenceUsed] = useState<boolean | null>(null);
-    const [matchedSection, setMatchedSection] = useState<string | null>(null);
-    const [providerUsed, setProviderUsed] = useState<string | null>(null);
+    
+    
+    const [setProviderUsed] = useState<string | null>(null);
     const [error, setError] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -108,7 +108,7 @@ const AIGeneratorModal: React.FC<AIGeneratorModalProps> = ({ isOpen, onClose, on
                     topic: q.topic || validated.category || 'General'
                 }));
                 setGeneratedQuestions(formatted);
-                setProviderUsed(data.meta?.providerUsed ?? null);
+                // setProviderUsed(data.meta?.providerUsed ?? null);
             } else {
                 setError(data.message || 'Failed to process file. Please ensure the file contains readable question data.');
             }
@@ -143,8 +143,8 @@ const AIGeneratorModal: React.FC<AIGeneratorModalProps> = ({ isOpen, onClose, on
                 setContext('');
                 setSelectedFile(null);
                 setGeneratedQuestions([]);
-                setMatchedSection(null);
-                setProviderUsed(null);
+                
+                // setProviderUsed(null);
             }, 300);
         }
     };

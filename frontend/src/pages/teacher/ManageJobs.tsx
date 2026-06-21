@@ -36,6 +36,8 @@ interface Job {
     salary_range?: string;
     expires_at?: string | null;
     max_applications?: number | null;
+    job_type?: string;
+    status?: string;
 }
 
 const ManageJobs = () => {
