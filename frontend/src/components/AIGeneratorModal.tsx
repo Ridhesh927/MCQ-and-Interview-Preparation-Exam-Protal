@@ -86,7 +86,7 @@ const AIGeneratorModal: React.FC<AIGeneratorModalProps> = ({ isOpen, onClose, on
                 formData.append('file', selectedFile);
             }
 
-            const response = await fetch('/api/ai/generate-questions', {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/ai/generate-questions`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${getToken('teacher')}`
