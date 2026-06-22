@@ -93,7 +93,7 @@ const StudentResults: React.FC<StudentResultsProps> = ({ standalone = true }) =>
         const fetchResults = async () => {
             try {
                 const token = getToken('student');
-                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}`}/api/exams/student/results', {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/exams/student/results`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const data = await response.json();
