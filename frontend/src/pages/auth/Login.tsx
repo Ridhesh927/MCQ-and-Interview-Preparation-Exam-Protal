@@ -42,8 +42,8 @@ const Login = () => {
       }
 
       const endpoint = isStudent
-        ? `${import.meta.env.VITE_API_BASE_URL || `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}`}/api/auth/student/login'
-        : `${import.meta.env.VITE_API_BASE_URL || `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}`}/api/auth/teacher/login';
+        ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/auth/student/login`
+        : `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/auth/teacher/login`;
 
       const body = isStudent
         ? { prn_number: parsed.data.identifier, password: parsed.data.password }
