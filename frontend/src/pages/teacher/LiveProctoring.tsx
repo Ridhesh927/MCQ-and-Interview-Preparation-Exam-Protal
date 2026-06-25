@@ -693,7 +693,7 @@ const LiveProctoring = () => {
           .proctor-feed.critical { border-color: var(--error) !important; box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); }
           .proctor-feed.suspended { border-color: #f97316 !important; box-shadow: 0 0 15px rgba(249, 115, 22, 0.22); }
           
-          .feed-video { position: relative; aspect-ratio: 16/9; background: #0c0c0d; border-radius: 4px; overflow: hidden; }
+          .feed-video { position: relative; aspect-ratio: 16/9; background: var(--bg, #000000); border-radius: 4px; overflow: hidden; }
           .feed-video video { width: 100%; height: 100%; object-fit: cover; }
           .video-placeholder { height: 100%; display: flex; align-items: center; justify-content: center; color: var(--surface); opacity: 0.35; }
           .feed-overlay { position: absolute; top: 0; left: 0; right: 0; padding: 0.65rem; display: flex; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent); }
@@ -811,7 +811,7 @@ const LiveProctoring = () => {
               flex: 1;
               min-height: 300px;
               overflow: auto; 
-              background: #0c0c0d; 
+              background: var(--bg, #000000); 
               padding: 1rem; 
               border-radius: 4px; 
               font-family: 'JetBrains Mono', monospace; 

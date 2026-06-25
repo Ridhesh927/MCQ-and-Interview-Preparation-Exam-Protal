@@ -1,25 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Neo-Academic Noir Palette */
-  --bg: #0c0c0d;
-  --surface-low: #141416;
-  --surface: #1c1c1f;
-  --surface-high: #27272a;
+  /* Pure Golden Taupe Palette */
+  --bg: #14120e;
+  --surface-low: #1d1912;
+  --surface: #2b251a;
+  --surface-high: #3d3525;
 
-  --sidebar-bg: rgba(18, 18, 18, 0.4);
-  --header-bg: rgba(12, 12, 13, 0.4);
-  --text-primary: #f4f4f5;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
+  --sidebar-bg: rgba(20, 18, 14, 0.6);
+  --header-bg: rgba(20, 18, 14, 0.6);
+  --text-primary: #FDFBD4;
+  --text-secondary: #BDB76B;
+  --text-muted: #8b8344;
 
-  --accent: #d97706;
-  /* Burnt Amber */
-  --accent-soft: #451a03;
-  --accent-text: #fef3c7;
+  --accent: #D4AF37;
+  --accent-soft: #CE8946;
+  --accent-text: #14120e;
+  --accent-alt: #BDB76B;
 
-  --border: #27272a;
-  --border-focus: #52525b;
+  --border: #3d3525;
+  --border-focus: #D4AF37;
 
   --error: #ef4444;
   --success: #22c55e;
@@ -38,24 +38,24 @@
 }
 
 [data-theme='light'] {
-  --bg: #f8fafc;
-  --surface-low: #f1f5f9;
+  --bg: #FDFBD4;
+  --surface-low: #f5f0bc;
   --surface: #ffffff;
-  --surface-high: #e2e8f0;
+  --surface-high: #e0d892;
 
-  --sidebar-bg: rgba(255, 255, 255, 0.8);
-  --header-bg: rgba(248, 250, 252, 0.8);
+  --sidebar-bg: rgba(253, 251, 212, 0.8);
+  --header-bg: rgba(253, 251, 212, 0.8);
 
-  --text-primary: #1e293b;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
+  --text-primary: #14120e;
+  --text-secondary: #4a4132;
+  --text-muted: #6b5f4a;
 
-  --accent: #b45309;
-  --accent-soft: #ffedd5;
-  --accent-text: #7c2d12;
+  --accent: #CE8946;
+  --accent-soft: #D4AF37;
+  --accent-text: #FDFBD4;
 
-  --border: #cbd5e1;
-  --border-focus: #94a3b8;
+  --border: #e0d892;
+  --border-focus: #CE8946;
 }
 
 * {

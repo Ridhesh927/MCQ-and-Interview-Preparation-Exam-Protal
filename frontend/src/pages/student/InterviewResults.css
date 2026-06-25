@@ -54,7 +54,7 @@
 }
 
 .score-badge.success .score-value { color: #16a34a; }
-.score-badge.warning .score-value { color: #d97706; }
+.score-badge.warning .score-value { color: var(--accent, #D4AF37); }
 
 .score-label {
     font-size: 0.875rem;

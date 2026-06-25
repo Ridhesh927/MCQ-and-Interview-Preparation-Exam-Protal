@@ -118,7 +118,7 @@
 
 .timer-action-btn.secondary {
     border-color: var(--border, rgba(255,255,255,.08));
-    background: var(--surface-high, #27272a);
+    background: var(--surface-high, #5C4E4E);
     color: var(--text-primary, #f4f4f5);
 }
 
@@ -149,7 +149,7 @@
     gap: 0.4rem;
     padding: 0.3rem 0.8rem;
     border-radius: 6px;
-    background: var(--surface-high, #27272a);
+    background: var(--surface-high, #5C4E4E);
     border: 1px solid transparent;
     color: var(--text-secondary, #a1a1aa);
     font-size: 0.8rem;
@@ -174,7 +174,7 @@
 /* Language selector */
 .lang-select {
     padding: 0.35rem 0.75rem;
-    background: var(--surface-high, #27272a);
+    background: var(--surface-high, #5C4E4E);
     border: 1px solid var(--border, rgba(255,255,255,.08));
     border-radius: 6px;
     color: var(--text-primary, #f4f4f5);
@@ -286,7 +286,7 @@
 
 /* Example blocks */
 .example-block {
-    background: var(--surface-high, #27272a);
+    background: var(--surface-high, #5C4E4E);
     border-radius: 8px;
     padding: 1rem;
     display: flex;
