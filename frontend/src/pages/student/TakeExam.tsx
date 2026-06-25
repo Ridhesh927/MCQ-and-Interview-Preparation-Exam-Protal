@@ -287,6 +287,12 @@ const TakeExam = () => {
       // If we were in fullscreen and exited, and the exam has started
       if (lastFullscreenState.current && !currentFull && hasStarted.current && !isExamTerminated) {
         handleViolation("Fullscreen Exited");
+      } else if (currentFull && hasStarted.current && !isExamTerminated) {
+        setTimeout(() => {
+          if (window.innerWidth < window.screen.width * 0.95) {
+            handleViolation("Browser Sidebar/Split Screen Detected");
+          }
+        }, 500);
       }
 
       lastFullscreenState.current = currentFull;
@@ -304,14 +310,24 @@ const TakeExam = () => {
       }
     };
 
+    const handleResize = () => {
+      if (document.fullscreenElement && hasStarted.current && !isExamTerminated) {
+        if (window.innerWidth < window.screen.width * 0.95) {
+          handleViolation("Browser Sidebar/Split Screen Detected");
+        }
+      }
+    };
+
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('blur', handleBlur);
+    window.addEventListener('resize', handleResize);
 
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('blur', handleBlur);
+      window.removeEventListener('resize', handleResize);
     };
   }, [sessionId, isExamTerminated, warningCount]);
 

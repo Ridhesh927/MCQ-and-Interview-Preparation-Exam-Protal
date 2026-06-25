@@ -32,7 +32,7 @@ const buildQuestionMapSections = (total: number): MapSection[] => {
         { key: 'dsa', label: 'DSA', color: '#6366f1' },
         { key: 'logical', label: 'Logical', color: '#06b6d4' },
         { key: 'verbal', label: 'Verbal', color: '#8b5cf6' },
-        { key: 'technical', label: 'Technical', color: '#d97706' },
+        { key: 'technical', label: 'Technical', color: '#D4AF37' },
     ];
 
     const remainderPriority = ['technical', 'dsa', 'logical', 'verbal'];
@@ -104,6 +104,12 @@ const TakeInterview = () => {
             if (hasStartedRef.current && !isTerminatedRef.current) {
                 if (currentFull === false) {
                     handleViolation('Fullscreen Exited');
+                } else {
+                    setTimeout(() => {
+                        if (window.innerWidth < window.screen.width * 0.95) {
+                            handleViolation('Browser Sidebar/Split Screen Detected');
+                        }
+                    }, 500);
                 }
             }
         };
@@ -120,14 +126,25 @@ const TakeInterview = () => {
             }
         };
 
+        const handleResize = () => {
+            if (document.fullscreenElement && hasStartedRef.current && !isTerminatedRef.current) {
+                // If viewport is significantly smaller than screen width, a side panel might be open
+                if (window.innerWidth < window.screen.width * 0.95) {
+                    handleViolation('Browser Sidebar/Split Screen Detected');
+                }
+            }
+        };
+
         document.addEventListener('fullscreenchange', handleFullscreenChange);
         document.addEventListener('visibilitychange', handleVisibilityChange);
         window.addEventListener('blur', handleBlur);
+        window.addEventListener('resize', handleResize);
 
         return () => {
             document.removeEventListener('fullscreenchange', handleFullscreenChange);
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('blur', handleBlur);
+            window.removeEventListener('resize', handleResize);
         };
     }, []);
 
